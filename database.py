@@ -85,42 +85,62 @@ for row in df.index:
       if polygon.contains(point): #Check in which polygon (district) contains the starting point of the route
         df.loc[row, 'District'] = feature['properties']['NOM'] #Counter for the number of routes in each district
         if feature['properties']['NOM'] == 'Eixample':
-          cont_districts[0] = cont_districts[0] + 1
+          cont_districts[0] += 1
         if feature['properties']['NOM'] == 'Ciutat Vella':
-          cont_districts[1] = cont_districts[1] + 1
+          cont_districts[1] += 1
         if feature['properties']['NOM'] == 'Sants-Montjuïc':
-          cont_districts[2] = cont_districts[2] + 1
+          cont_districts[2] += 1
         if feature['properties']['NOM'] == 'Les Corts':
-          cont_districts[3] = cont_districts[3] + 1
+          cont_districts[3] += 1
         if feature['properties']['NOM'] == 'Sarrià-Sant Gervasi':
-          cont_districts[4] = cont_districts[4] + 1
+          cont_districts[4] += 1
         if feature['properties']['NOM'] == 'Gràcia':
-          cont_districts[5] = cont_districts[5] + 1
+          cont_districts[5] += 1
         if feature['properties']['NOM'] == 'Horta-Guinardó':
-          cont_districts[6] = cont_districts[6] + 1
+          cont_districts[6] += 1
         if feature['properties']['NOM'] == 'Nou Barris':
-          cont_districts[7] = cont_districts[7] + 1
+          cont_districts[7] += 1
         if feature['properties']['NOM'] == 'Sant Andreu':
-          cont_districts[8] = cont_districts[8] + 1
+          cont_districts[8] += 1
         if feature['properties']['NOM'] == 'Sant Martí':
-          cont_districts[9] = cont_districts[9] + 1
+          cont_districts[9] += 1
   else:
     routes.append("No information")
 
 #Weather and part of the day information
 meteo = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Dades_meteorologiques_de_la_XEMA.csv", sep = ',')
 
-sun_2018 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2018.csv")
-sun_2019 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2019.csv")
 sun_2010 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2020.csv")
 sun_2021 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2021.csv")
 sun_2022 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2022.csv")
 
+def rain(value):
+  if value == 0:
+    return "No rain"
+  if value > 0 and value <= 2:
+    return "Weak"
+  if value > 2 and value <= 15:
+    return "Moderate"
+  if value > 15 and value <= 30:
+    return "Strong"
+  if value > 30 and value <= 60:
+    return "Very heavy"
+  if value > 60:
+    return "Torrential"
+
+def wind(value):
+  if (value*3.6) < 15:
+    return "No wind"
+  if (value*3.6) >= 15 and (value*3.6) <= 40:
+    return "Moderate"
+  if (value*3.6) > 40 and (value*3.6) <= 70:
+    return "Strong"
+  if (value*3.6) > 70 and (value*3.6) <= 120:
+    return "Very strong"
+  if (value*3.6) > 120:
+    return "Hurricanes"
+
 for row in df.index:
-  if df.loc[row, 'Date'].year == 2018:
-    info_year = sun_2018
-  if df.loc[row, 'Date'].year == 2019:
-    info_year = sun_2019
   if df.loc[row, 'Date'].year == 2020:
     info_year = sun_2010
   if df.loc[row, 'Date'].year == 2021:
@@ -128,23 +148,23 @@ for row in df.index:
   if df.loc[row, 'Date'].year == 2022:
     info_year = sun_2022
   for n in info_year.index:
-    date_obj3 = datetime.datetime.strptime(sun_2021.loc[n, 'Fecha'], '%d/%m/%Y')
+    date_obj3 = datetime.datetime.strptime(info_year.loc[n, 'Fecha'], '%d/%m/%Y')
     if date_obj3.day == df.loc[row, 'Date'].day and date_obj3.month == df.loc[row, 'Date'].month and date_obj3.year == df.loc[row, 'Date'].year:
-      date_obj4 = datetime.datetime.strptime(sun_2021.loc[n, 'Salida de sol'], '%I:%M:%S %p')
-      date_obj5 = datetime.datetime.strptime(sun_2021.loc[n, 'Puesta de sol'], '%I:%M:%S %p')
-      date_obj6 = datetime.datetime.strptime("9:00:59", '%H:%M:%S')
-      date_obj7 = datetime.datetime.strptime("9:01:00", '%H:%M:%S')
-      date_obj8 = datetime.datetime.strptime("12:00:59", '%H:%M:%S')
-      date_obj9 = datetime.datetime.strptime("12:01:00", '%H:%M:%S')
-      date_obj10 = datetime.datetime.strptime("17:00:59", '%H:%M:%S')
-      date_obj11 = datetime.datetime.strptime("17:01:00", '%H:%M:%S')
+      date_obj4 = datetime.datetime.strptime(info_year.loc[n, 'Salida de sol'], '%I:%M:%S %p') + datetime.timedelta(0,-1800)
+      date_obj5 = datetime.datetime.strptime(info_year.loc[n, 'Puesta de sol'], '%I:%M:%S %p') + datetime.timedelta(0, 1800)
+      date_obj6 = date_obj4 + datetime.timedelta(0,3600)
+      date_obj7 = datetime.datetime.strptime("11:50:59", '%H:%M:%S')
+      date_obj8 = datetime.datetime.strptime("12:10:59", '%H:%M:%S')
+      date_obj9 = datetime.datetime.strptime("17:00:59", '%H:%M:%S')
       if df.loc[row, 'Date'].time() >= date_obj4.time() and df.loc[row, 'Date'].time() <= date_obj6.time():
           df.loc[row, 'Part of the day'] = "Early morning"
-      if df.loc[row, 'Date'].time() >= date_obj7.time() and df.loc[row, 'Date'].time() <= date_obj8.time():
+      if df.loc[row, 'Date'].time() > date_obj6.time() and df.loc[row, 'Date'].time() <= date_obj7.time():
           df.loc[row, 'Part of the day'] = "Morning"
-      if df.loc[row, 'Date'].time() >= date_obj9.time() and df.loc[row, 'Date'].time() <= date_obj10.time():
+      if df.loc[row, 'Date'].time() > date_obj7.time() and df.loc[row, 'Date'].time() <= date_obj8.time():
+          df.loc[row, 'Part of the day'] = "Noon"
+      if df.loc[row, 'Date'].time() > date_obj8.time() and df.loc[row, 'Date'].time() <= date_obj9.time():
           df.loc[row, 'Part of the day'] = "Afternoon"
-      if df.loc[row, 'Date'].time() >= date_obj11.time() and df.loc[row, 'Date'].time() <= date_obj5.time():
+      if df.loc[row, 'Date'].time() > date_obj9.time() and df.loc[row, 'Date'].time() <= date_obj5.time():
           df.loc[row, 'Part of the day'] = "Evening"
       if df.loc[row, 'Date'].time() < date_obj4.time() and df.loc[row, 'Date'].time() > date_obj5.time():
         df.loc[row, 'Part of the day'] = "Night"
@@ -163,83 +183,23 @@ for row in df.index:
             if meteo.loc[i, 'CODI_VARIABLE'] == 32:
               df.loc[row, 'Temperature [ºC]'] = meteo.loc[i, 'VALOR_LECTURA']
             if meteo.loc[i, 'CODI_VARIABLE'] == 35:
-              if meteo.loc[i, 'VALOR_LECTURA'] == 0:
-                df.loc[row, 'Rain'] = "No rain"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 0 and meteo.loc[i, 'VALOR_LECTURA'] <= 2:
-                df.loc[row, 'Rain'] = "Weak"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 2 and meteo.loc[i, 'VALOR_LECTURA'] <= 15:
-                df.loc[row, 'Rain'] = "Moderate"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 15 and meteo.loc[i, 'VALOR_LECTURA'] <= 30:
-                df.loc[row, 'Rain'] = "Strong"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 30 and meteo.loc[i, 'VALOR_LECTURA'] <= 60:
-                df.loc[row, 'Rain'] = "Very heavy"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 60:
-                df.loc[row, 'Rain'] = "Torrential"
+              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
             if meteo.loc[i, 'CODI_VARIABLE'] == 30:
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) < 15:
-                df.loc[row, 'Wind'] = "No wind"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) >= 15 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 40:
-                df.loc[row, 'Wind'] = "Moderate"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 40 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 70:
-                df.loc[row, 'Wind'] = "Strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 70 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 120:
-                df.loc[row, 'Wind'] = "Very strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 120:
-                df.loc[row, 'Wind'] = "Hurricanes"
+              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
           if df.loc[row, 'Date'].minute >=15 and df.loc[row, 'Date'].minute < 45 and date_obj2.minute == 30:
             if meteo.loc[i, 'CODI_VARIABLE'] == 32:
               df.loc[row, 'Temperature [ºC]'] = meteo.loc[i, 'VALOR_LECTURA']
             if meteo.loc[i, 'CODI_VARIABLE'] == 35:
-              if meteo.loc[i, 'VALOR_LECTURA'] == 0:
-                df.loc[row, 'Rain'] = "No rain"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 0 and meteo.loc[i, 'VALOR_LECTURA'] <= 2:
-                df.loc[row, 'Rain'] = "Weak"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 2 and meteo.loc[i, 'VALOR_LECTURA'] <= 15:
-                df.loc[row, 'Rain'] = "Moderate"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 15 and meteo.loc[i, 'VALOR_LECTURA'] <= 30:
-                df.loc[row, 'Rain'] = "Strong"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 30 and meteo.loc[i, 'VALOR_LECTURA'] <= 60:
-                df.loc[row, 'Rain'] = "Very heavy"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 60:
-                df.loc[row, 'Rain'] = "Torrential"
+              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
             if meteo.loc[i, 'CODI_VARIABLE'] == 30:
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) < 15:
-                df.loc[row, 'Wind'] = "No wind"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) >= 15 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 40:
-                df.loc[row, 'Wind'] = "Moderate"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 40 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 70:
-                df.loc[row, 'Wind'] = "Strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 70 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 120:
-                df.loc[row, 'Wind'] = "Very strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 120:
-                df.loc[row, 'Wind'] = "Hurricanes"
-          if df.loc[row, 'Date'].minute > 45 and date_obj2.minute == 30:
+              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
+          if df.loc[row, 'Date'].minute >= 45 and date_obj2.minute == 30:
             if meteo.loc[i+4, 'CODI_VARIABLE'] == 32:
               df.loc[row, 'Temperature [ºC]'] = meteo.loc[i+4, 'VALOR_LECTURA']
             if meteo.loc[i, 'CODI_VARIABLE'] == 35:
-              if meteo.loc[i, 'VALOR_LECTURA'] == 0:
-                df.loc[row, 'Rain'] = "No rain"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 0 and meteo.loc[i, 'VALOR_LECTURA'] <= 2:
-                df.loc[row, 'Rain'] = "Weak"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 2 and meteo.loc[i, 'VALOR_LECTURA'] <= 15:
-                df.loc[row, 'Rain'] = "Moderate"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 15 and meteo.loc[i, 'VALOR_LECTURA'] <= 30:
-                df.loc[row, 'Rain'] = "Strong"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 30 and meteo.loc[i, 'VALOR_LECTURA'] <= 60:
-                df.loc[row, 'Rain'] = "Very heavy"
-              if meteo.loc[i, 'VALOR_LECTURA'] > 60:
-                df.loc[row, 'Rain'] = "Torrential"
+              df.loc[row, 'Rain'] = rain(meteo.loc[i+4, 'VALOR_LECTURA'])
             if meteo.loc[i, 'CODI_VARIABLE'] == 30:
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) < 15:
-                df.loc[row, 'Wind'] = "No wind"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) >= 15 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 40:
-                df.loc[row, 'Wind'] = "Moderate"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 40 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 70:
-                df.loc[row, 'Wind'] = "Strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 70 and (meteo.loc[i, 'VALOR_LECTURA']*3.6) <= 120:
-                df.loc[row, 'Wind'] = "Very strong"
-              if (meteo.loc[i, 'VALOR_LECTURA']*3.6) > 120:
-                df.loc[row, 'Wind'] = "Hurricanes"
+              df.loc[row, 'Wind'] = wind(meteo.loc[i+4, 'VALOR_LECTURA'])
 
 df.to_csv('table_df.csv', index=None, columns=None)
 folium.TileLayer('cartodbpositron').add_to(city_map)
