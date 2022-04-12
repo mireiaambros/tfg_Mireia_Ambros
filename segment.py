@@ -34,7 +34,7 @@ def process_video_segment(path, model):
     frame_length = cap.get(cv2.CAP_PROP_FRAME_COUNT) #Extreu info del numero de frames
     if fps != 0:
       video_length = frame_length/fps
-    decimla, frames_T = math.modf(fps * 2)
+    decimla, frames_T = math.modf(fps * T)
     cont_frames_T = 0
     
     # Variables
