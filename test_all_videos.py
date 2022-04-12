@@ -10,7 +10,7 @@ import numpy as np
 import os
 import pandas as pd
 
-root = "/home/usuaris/imatge/mireia.ambros/videos/"
+root = "/mnt/gpid08/datasets/micromobility/lane_classification/videos/"
 y_pred = []
 folder2 = []
 video_list = []
@@ -119,13 +119,11 @@ def main():
                         folder2.append(folder3)
                     y_pred.append(class_dict[prediction])
                     if folder3 == class_dict[prediction]:
-                        video_list.append((file, "bike", class_dict[prediction], "Yes"))
+                        video_list.append((file, folder3, class_dict[prediction], "Yes"))
                     else:
-                        video_list.append((file, "bike", class_dict[prediction], "No"))
+                        video_list.append((file, folder3, class_dict[prediction], "No"))
             df = pd.DataFrame(video_list, columns=['Filename', 'Actual', 'Prediction', 'Correct prediction'])
-    print(folder2)
-    print(y_pred)
-    df.to_csv('pred_df.csv', index=None, columns=None)
+    df.to_csv('test_all_videos_df.csv', index=None, columns=None)
 
 #Matriu de confusio
 from pandas import DataFrame
@@ -135,7 +133,7 @@ import matplotlib.font_manager as fm
 from matplotlib.collections import QuadMesh
 import seaborn as sn
 
-class_list = ['bike', 'crosswalk', 'road', 'shared']
+class_list = ['bike', 'crosswalk', 'road', 'shared', 'sidewalk']
 
 def get_new_fig(fn, figsize=[10,10]):
     """ Init graphics """
@@ -314,7 +312,7 @@ def pretty_plot_confusion_matrix(df_cm, annot=True, cmap="Oranges", fmt='.2f', f
     ax.set_ylabel(ylbl)
     plt.tight_layout()  #set layout slim
     plt.show()
-    plt.savefig('my_plot.png')
+    plt.savefig('test_all_videos_plot.png')
 
 def plot_confusion_matrix_from_data(y_test, predictions, columns=None, annot=True, cmap="Oranges",
       fmt='.2f', fz=15, lw=0.5, cbar=False, figsize=[12,12], show_null_values=0, pred_val_axis='lin'):

@@ -15,8 +15,7 @@ root = "/home/usuaris/imatge/mireia.ambros/videos2/"
 folder2 = []
 video_list = []
 pred_class = []
-#prediction = []
-T = 2
+T = 2 #number of seconds of each T segment
 
 def process_video_segment(path, model):
    
@@ -65,7 +64,6 @@ def process_video_segment(path, model):
 
             if cont_frames_T < frames_T:
                 prob_list.append(preds)
-                print(cont_frames_T)
                 cont_frames_T += 1
             else:
                 preds = sum(prob_list) #Sums the probabilities of each image in the segments of T seconds
@@ -135,7 +133,7 @@ def main():
                         cont += 1
                     prediction.clear()         
             df = pd.DataFrame(video_list, columns=['Filename', 'Num of segment', 'Actual', 'Prediction', 'Correct prediction'])
-    df.to_csv('pred_segment_df.csv', index=None, columns=None)
+    df.to_csv('segment_df.csv', index=None, columns=None)
 
 if(__name__ == '__main__'):
     main()
