@@ -2,12 +2,13 @@
 This script
 
 Usage:
-  models.py [--modelType=<mt>] [--segmentDuration=<sd>]
+  models.py [--modelType=<mt>] [--segmentDuration=<sd>] [--framesPerSecond=<fs>]
   models.py -h | --help
   
 Options:
   --modelType=<mt>        Model used (3d or 2d) [default: 3d]
   --segmentDuration=<sd>    Segment duration [default: 2]
+  --framesPerSecond=<fs>    Frames per second for prediction [default: 3]
 """
 from docopt import docopt
 import torch
@@ -144,7 +145,9 @@ def process_video_segment(path, model):
     if fps != 0:
       video_length = frame_length/fps
     decimal, frames_T = math.modf(fps * T)
+    decimal_seg, frames_seg_total = math.modf(fps / frames_seg)
     cont_frames_T = 0
+    cont_frames_seg = 0
     
     # Variables
     prob_list = []
@@ -158,33 +161,39 @@ def process_video_segment(path, model):
 
         if ret and current_frame < frame_length:
 
-            # Apply a transform to normalize the image from video input
-            image_data = transform(Image.fromarray(frame))
-                      
-            # Pass the input clip through the model
-            inputs = image_data
-            inputs = inputs.to("cuda")
+            if cont_frames_seg == frames_seg_total:
 
-            # Prediction 
-            preds = model(inputs[None, ...]) 
+                # Apply a transform to normalize the image from video input
+                image_data = transform(Image.fromarray(frame))
+                        
+                # Pass the input clip through the model
+                inputs = image_data
+                inputs = inputs.to("cuda")
 
-            # Saves predictions for each image
-            post_act = torch.nn.Softmax(dim=1) 
-            preds = post_act(preds.cpu()).detach().numpy()
+                # Prediction 
+                preds = model(inputs[None, ...]) 
 
-            if cont_frames_T < frames_T:
-                prob_list.append(preds)
-                cont_frames_T += 1
-            else:
-                preds = sum(prob_list) #Sums the probabilities of each image in the segments of T seconds
-                pred_class.append(class_dict[np.argmax(preds)]) #Get the predicted classes of the segment
-                cont_frames_T = 0
-                prob_list.clear()
-            
+                # Saves predictions for each image
+                post_act = torch.nn.Softmax(dim=1) 
+                preds = post_act(preds.cpu()).detach().numpy()
+
+                if cont_frames_T < frames_T:
+                    prob_list.append(preds)
+                    cont_frames_seg = 0
+                else:
+                    preds = sum(prob_list) #Sums the probabilities of each image in the segments of T seconds
+                    pred_class.append(class_dict[np.argmax(preds)]) #Get the predicted classes of the segment
+                    cont_frames_T = 0
+                    cont_frames_seg = 0
+                    prob_list.clear()
+            cont_frames_T += 1
+            cont_frames_seg += 1
             current_frame += 1
                       
         else:
             #No more frames
+            if not prob_list:
+                break
             preds = sum(prob_list) #Sums the probabilities of each image in the segments of T seconds
             pred_class.append(class_dict[np.argmax(preds)]) #Get the predicted classes of the segment
             cap.release()
@@ -253,8 +262,8 @@ import matplotlib.font_manager as fm
 from matplotlib.collections import QuadMesh
 import seaborn as sn
 
-class_list = ['bike', 'road']
-#class_list = ['bike', 'crosswalk', 'road', 'shared', 'sidewalk']
+#class_list = ['bike', 'road']
+class_list = ['bike', 'crosswalk', 'road', 'shared', 'sidewalk']
 
 def get_new_fig(fn, figsize=[10,10]):
     """ Init graphics """
@@ -468,5 +477,6 @@ if(__name__ == '__main__'):
     args = docopt(__doc__)
     tipus_model  = args["--modelType"]
     T = int(args['--segmentDuration']) #number of seconds of each T segment
+    frames_seg = int(args['--framesPerSecond']) #number of frame per second to do the prediction
     main()
     plot_confusion_matrix_from_data(folder2, y_pred)
