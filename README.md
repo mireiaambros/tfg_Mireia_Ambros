@@ -18,6 +18,7 @@ Para ejecutar el programa:
 `modelsSegment.py`
 Para ejecutar el programa: 
 >srun --gres=gpu:1 --time=15:15:00 -c 10 --mem 20G python models.py --modelType='2d' --segmentDuration=2 --framesPerSecond=3
+Los parámetros segmentDuration (valor de T segundos de cada segmento) y framesPerSecond (valor de F frames por segundo que coges para hacer la predicción en cada segmento) los puede ajustar el usuario a la hora de correr el script.
 ------------------
 `modelsVideo.py`
 Para ejecutar el programa: 
