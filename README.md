@@ -6,6 +6,9 @@ SCRIPTS: `database2021.py`, `database2022.py`, `query.py`
 * **Evaluación** a nivel de segmento y de vídeo de los modelos 2D: **ShuffleNet V2** y **MobileNet V3**
 SCRIPTS: `modelsSegment.py`, `modelsVideo.py`, `splitdatabase.py`
 
+SCRIPTS
+-------
+
 `database2021.py` y `database2022.py`
 
 Para ejecutar el programa: 
