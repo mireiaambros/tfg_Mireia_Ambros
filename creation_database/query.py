@@ -10,7 +10,7 @@ df_query = df.query("`Road type`=='sidewalk'")
 rows = df_query.index
 df_query.to_csv('sidewalk_2022.csv', index=None, columns=None)
 
-center_lat = 41.390205
+center_lat = 41.390205 #Barcelona coordinates
 center_lon = 2.154007
 
 city_map_query = folium.Map(location=[center_lat, center_lon], zoom_start=13.5,  prefer_canvas=True) #prefer_canvas increases performance in some cases

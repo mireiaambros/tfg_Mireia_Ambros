@@ -24,6 +24,12 @@ USAGE:
 
 `query.py`
 -------
+CONFIGURE:
+- df_query: The desired query
 
-Usage:
+OUTPUT:
+- CSV FILE: Line 11
+- HTML MAP: Line 24
+
+USAGE:
 >python query.py
