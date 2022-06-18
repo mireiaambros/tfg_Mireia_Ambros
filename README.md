@@ -1,11 +1,13 @@
 TFG - Mireia Ambros: micromobility
 ===================================================
-Este proyecto consiste en la creación de unas bases de datos de videos de unos vehículos de movilidad ligera y la implementación de algorismos de Deep Learning que detectan el tipo de vía para incrementar la seguridad urbana de los vehículos de micromobilidad. 
+This project consists of the creation of video databases of light mobility vehicles and the implementation of Deep Learning algorithms that detect the type of road to increase the urban safety of micromobility vehicles.  
 
 The scripts of this project are divided into two blocks:
 * Creation of the structured video **database** and the representation of the route of each video in an interactive **map**.
+FOLDER: creation_database
 SCRIPTS: `database2021.py`, `query.py`
 * **Evaluation** at segment and video level of 2D models: **ShuffleNet V2** and **MobileNet V3**.
+FOLDER: evaluation_models
 SCRIPTS: `splitdatabase.py` (optional), `modelsSegment.py`, `modelsSegment2.py` (optional), `modelsVideo.py` 
 
 SCRIPTS
