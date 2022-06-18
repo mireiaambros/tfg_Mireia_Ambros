@@ -22,6 +22,7 @@ NOTES:
 USAGE: 
 >python database.py
 
+
 `query.py`
 
 CONFIGURE:
