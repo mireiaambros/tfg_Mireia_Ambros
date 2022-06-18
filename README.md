@@ -8,13 +8,13 @@ The scripts of this project are divided into two blocks:
 
 creation_database
 -------
-* Creation of the structured video **database** and the representation of the route of each video in an interactive **map**.
+Creation of the structured video **database** and the representation of the route of each video in an interactive **map**.
 
 SCRIPTS: `database2021.py`, `query.py`
 
 evaluation_models
 -------
-* **Evaluation** at segment and video level of 2D models: **ShuffleNet V2** and **MobileNet V3**.
+**Evaluation** at segment and video level of 2D models: **ShuffleNet V2** and **MobileNet V3**.
 
 SCRIPTS: `splitdatabase.py` (optional), `modelsSegment.py`, `modelsSegment2.py` (optional), `modelsVideo.py` 
 
