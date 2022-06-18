@@ -22,6 +22,7 @@ midd_lon1 = []
 midd_lat2 = []
 midd_lon2 = []
 
+#METADATA EXTRACTION
 for folder in os.listdir(root):
     if os.path.isdir(os.path.join(root, folder)):
         for file in sorted(os.listdir(root + folder)):
@@ -101,10 +102,8 @@ for folder in os.listdir(root):
               df.iloc[this_row, 8] = round(float(last_lat), 6) 
               df.iloc[this_row, 9] = round(float(last_lon), 6)
 
-#Weather and part of the day information
+#WEATHER AND PART OF THE DAY EXTRACTION
 meteo = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Dades_meteorologiques_de_la_XEMA.csv", sep = ',')
-
-sun_2010 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2020.csv")
 sun_2021 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2021.csv")
 sun_2022 = pd.read_csv("/home/usuaris/imatge/mireia.ambros/meteo/Barcelona-sun-2022.csv")
 
@@ -135,8 +134,6 @@ def wind(value):
     return "Hurricanes"
 
 for row in df.index:
-  if df.loc[row, 'Date'].year == 2020:
-    info_year = sun_2010
   if df.loc[row, 'Date'].year == 2021:
     info_year = sun_2021
   if df.loc[row, 'Date'].year == 2022:
@@ -162,47 +159,47 @@ for row in df.index:
           df.loc[row, 'Part of the day'] = "Evening"
       if df.loc[row, 'Date'].time() < date_obj4.time() or df.loc[row, 'Date'].time() > date_obj5.time():
         df.loc[row, 'Part of the day'] = "Night"
-#  for i in meteo.index:
-#    date_found = False
-#    date_obj2 = datetime.datetime.strptime(meteo.loc[i, 'DATA_LECTURA'], '%d/%m/%Y %I:%M:%S %p')
-#    if date_obj2.day == df.loc[row, 'Date'].day and date_obj2.month == df.loc[row, 'Date'].month and date_obj2.year == df.loc[row, 'Date'].year and date_found == False:
-#      date_found =  True
-#      if date_obj2.hour == df.loc[row, 'Date'].hour:
-#        if meteo.loc[i, 'DATA_LECTURA'].find("AM")!=-1:
-#          info_hour = "AM"
-#        if meteo.loc[i, 'DATA_LECTURA'].find("PM")!=-1:
-#          info_hour = "PM"
-#        if meteo.loc[i, 'DATA_LECTURA'].find(info_hour)!=-1:
-#          if df.loc[row, 'Date'].minute < 15 and date_obj2.minute == 0:
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 32:
-#              df.loc[row, 'Temperature [C]'] = meteo.loc[i, 'VALOR_LECTURA']
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 35:
-#              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 30:
-#              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
-#          if df.loc[row, 'Date'].minute >=15 and df.loc[row, 'Date'].minute < 45 and date_obj2.minute == 30:
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 32:
-#              df.loc[row, 'Temperature [C]'] = meteo.loc[i, 'VALOR_LECTURA']
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 35:
-#              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
-#            if meteo.loc[i, 'CODI_VARIABLE'] == 30:
-#              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
-#          if df.loc[row, 'Date'].minute >= 45 and date_obj2.minute == 30:
-#            if meteo.loc[i+3, 'CODI_VARIABLE'] == 32:
-#              df.loc[row, 'Temperature [C]'] = meteo.loc[i+3, 'VALOR_LECTURA']
-#            if meteo.loc[i+3, 'CODI_VARIABLE'] == 35:
-#              df.loc[row, 'Rain'] = rain(meteo.loc[i+3, 'VALOR_LECTURA'])
-#            if meteo.loc[i+3, 'CODI_VARIABLE'] == 30:
-#              df.loc[row, 'Wind'] = wind(meteo.loc[i+3, 'VALOR_LECTURA'])
+  for i in meteo.index:
+    date_found = False
+    date_obj2 = datetime.datetime.strptime(meteo.loc[i, 'DATA_LECTURA'], '%d/%m/%Y %I:%M:%S %p')
+    if date_obj2.day == df.loc[row, 'Date'].day and date_obj2.month == df.loc[row, 'Date'].month and date_obj2.year == df.loc[row, 'Date'].year and date_found == False:
+      date_found =  True
+      if date_obj2.hour == df.loc[row, 'Date'].hour:
+        if meteo.loc[i, 'DATA_LECTURA'].find("AM")!=-1:
+          info_hour = "AM"
+        if meteo.loc[i, 'DATA_LECTURA'].find("PM")!=-1:
+          info_hour = "PM"
+        if meteo.loc[i, 'DATA_LECTURA'].find(info_hour)!=-1:
+          if df.loc[row, 'Date'].minute < 15 and date_obj2.minute == 0:
+            if meteo.loc[i, 'CODI_VARIABLE'] == 32:
+              df.loc[row, 'Temperature [C]'] = meteo.loc[i, 'VALOR_LECTURA']
+            if meteo.loc[i, 'CODI_VARIABLE'] == 35:
+              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
+            if meteo.loc[i, 'CODI_VARIABLE'] == 30:
+              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
+          if df.loc[row, 'Date'].minute >=15 and df.loc[row, 'Date'].minute < 45 and date_obj2.minute == 30:
+            if meteo.loc[i, 'CODI_VARIABLE'] == 32:
+              df.loc[row, 'Temperature [C]'] = meteo.loc[i, 'VALOR_LECTURA']
+            if meteo.loc[i, 'CODI_VARIABLE'] == 35:
+              df.loc[row, 'Rain'] = rain(meteo.loc[i, 'VALOR_LECTURA'])
+            if meteo.loc[i, 'CODI_VARIABLE'] == 30:
+              df.loc[row, 'Wind'] = wind(meteo.loc[i, 'VALOR_LECTURA'])
+          if df.loc[row, 'Date'].minute >= 45 and date_obj2.minute == 30:
+            if meteo.loc[i+3, 'CODI_VARIABLE'] == 32:
+              df.loc[row, 'Temperature [C]'] = meteo.loc[i+3, 'VALOR_LECTURA']
+            if meteo.loc[i+3, 'CODI_VARIABLE'] == 35:
+              df.loc[row, 'Rain'] = rain(meteo.loc[i+3, 'VALOR_LECTURA'])
+            if meteo.loc[i+3, 'CODI_VARIABLE'] == 30:
+              df.loc[row, 'Wind'] = wind(meteo.loc[i+3, 'VALOR_LECTURA'])
 
-#Geolocation information
+#GEOLOCATION EXTRACTION
 BCNGeo = 'https://raw.githubusercontent.com/martgnz/bcn-geodata/master/districtes/districtes.geojson'
 all_districts = pd.read_json(BCNGeo)
 cont_districts = np.zeros(10, int) #There are 10 districts/neighbours in BCN
 cont = 0
 routes = []
 
-center_lat = 41.390205
+center_lat = 41.390205 #Barcelona coordinates
 center_lon = 2.154007
 
 city_map = folium.Map(location=[center_lat, center_lon], zoom_start=13.5,  prefer_canvas=True) #prefer_canvas increases performance in some cases
@@ -216,8 +213,7 @@ for row in df.index:
     routes.append(route)
     route.add_to(city_map)
     point = Point(df.loc[row, 'First Longitude'], df.loc[row, 'First Latitude'])
-    #Haversine formula
-    distance = haversine((df.loc[row, 'First Longitude'], df.loc[row, 'First Latitude']), (midd_lon1[cont], midd_lat1[cont]), unit=Unit.METERS) + haversine((midd_lon1[cont], midd_lat1[cont]), (midd_lon2[cont], midd_lat2[cont]), unit=Unit.METERS) + haversine((midd_lon2[cont], midd_lat2[cont]), (df.loc[row, 'Last Longitude'], df.loc[row, 'Last Latitude']), unit=Unit.METERS)
+    distance = haversine((df.loc[row, 'First Longitude'], df.loc[row, 'First Latitude']), (midd_lon1[cont], midd_lat1[cont]), unit=Unit.METERS) + haversine((midd_lon1[cont], midd_lat1[cont]), (midd_lon2[cont], midd_lat2[cont]), unit=Unit.METERS) + haversine((midd_lon2[cont], midd_lat2[cont]), (df.loc[row, 'Last Longitude'], df.loc[row, 'Last Latitude']), unit=Unit.METERS) #Haversine formula
     df.loc[row, 'Distance [m]'] = round(distance, 2)
     df.loc[row, 'Speed [km/h]'] = round(distance*3.6/(df.loc[row, 'Duration [s]']), 2) #In km/h
     cont = cont + 1
@@ -248,7 +244,7 @@ for row in df.index:
   else:
     routes.append("No information")
 
-#df.to_csv('database_2022.csv', index=None, columns=None)
+df.to_csv('database_2022.csv', index=None, columns=None)
 folium.TileLayer('cartodbpositron').add_to(city_map)
 
 #Visualize the map
@@ -261,30 +257,30 @@ for i in cont_districts:
 
 df2 = pd.DataFrame(data2, index=['Eixample', 'Ciutat Vella', 'Sants-Montjuïc', 'Les Corts', 'Sarrià-Sant Gervasi', 'Gràcia', 'Horta-Guinardó', 'Nou Barris', 'Sant Andreu', 'Sant Martí'], columns=['Number of routes'])
 
-#city_map.choropleth(geo_data = BCNGeo, data=df2, 
-#                    columns=[df2.index, 'Number of routes'], key_on='feature.properties.NOM', 
-#                    fill_color='BuPu', fill_opacity=0.5, line_opacity=0.4, legend_name='Number of routes per district', smooth_factor=0, bins=5)
+city_map.choropleth(geo_data = BCNGeo, data=df2, 
+                    columns=[df2.index, 'Number of routes'], key_on='feature.properties.NOM', 
+                    fill_color='BuPu', fill_opacity=0.5, line_opacity=0.4, legend_name='Number of routes per district', smooth_factor=0, bins=5)
 
-# We specify a lambda function mapping a GeoJson Feature to a style dict
-#style_function = lambda x: {'fillColor': '#eef4ff', 
-#                            'color':'#eef4ff', 
-#                            'fillOpacity': 0.1, 
-#                            'weight': 0.1}
+#We specify a lambda function mapping a GeoJson Feature to a style dict
+style_function = lambda x: {'fillColor': '#eef4ff', 
+                            'color':'#eef4ff', 
+                            'fillOpacity': 0.1, 
+                            'weight': 0.1}
 
 # We specify a function mapping a GeoJson Feature to a style dict for mouse events, in this case "highlighting"
-#highlight_function = lambda x: {'fillColor': '#eef4ff', 
-#                                'color':'#eef4ff', 
-#                                'fillOpacity': 0.70, 
-#                                'weight': 0.1}
+highlight_function = lambda x: {'fillColor': '#eef4ff', 
+                                'color':'#eef4ff', 
+                                'fillOpacity': 0.70, 
+                                'weight': 0.1}
 
 # We create a new layer for the map which is going to give us the interactivity
-#BCNT = folium.features.GeoJson(BCNGeo, style_function=style_function,
-#    control=False,
-#    highlight_function=highlight_function, 
-#    tooltip=folium.features.GeoJsonTooltip(fields=['NOM'], aliases=['District name:'], style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")))
+BCNT = folium.features.GeoJson(BCNGeo, style_function=style_function,
+    control=False,
+    highlight_function=highlight_function, 
+    tooltip=folium.features.GeoJsonTooltip(fields=['NOM'], aliases=['District name:'], style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")))
 
-#city_map.add_child(BCNT) # We add this new layer
-#city_map.keep_in_front(BCNT) # By keeping it in front we will ensure that each time we deploy the map, this layer will be in the front
-#folium.LayerControl().add_to(city_map)
+city_map.add_child(BCNT) # We add this new layer
+city_map.keep_in_front(BCNT) # By keeping it in front we will ensure that each time we deploy the map, this layer will be in the front
+folium.LayerControl().add_to(city_map)
 folium.TileLayer('cartodbpositron').add_to(city_map)
 city_map.save('map_2022_daynight.html')
