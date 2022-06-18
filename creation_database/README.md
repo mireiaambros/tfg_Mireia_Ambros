@@ -2,6 +2,7 @@ creation_database
 ========
 
 **`database.py`**
+
 DESCRIPTION: This script creates the table that contains the information of all the videos in the database using Pandas. Metadata information, weather, part of the day and geolocation. It also creates a map with the routes of all the videos using Folium.
 
 CONFIGURE:
@@ -24,6 +25,7 @@ USAGE:
 >python database.py
 
 **`query.py`**
+
 DESCRIPTION: This script makes a query of the database table with all the videos. This query can be done with all the fields. It creates a new table and a map that shows only the routes that satisfy the query condition.
 
 CONFIGURE:
@@ -34,4 +36,4 @@ OUTPUT:
 - HTML MAP: Line 24
 
 USAGE:
->>python query.py
+>python query.py
