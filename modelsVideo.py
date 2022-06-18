@@ -32,9 +32,9 @@ def main():
     num_videos = 0
 
     if tipus_model == '2d':
-        models = pd.read_csv("/home/usuaris/imatge/mireia.ambros/models_2d_T2F25_val_2021.csv")
+        models = pd.read_csv("/home/usuaris/imatge/mireia.ambros/models_2d_T3F4_val_2021.csv")
     if tipus_model == '2d_2022':
-        models = pd.read_csv("/home/usuaris/imatge/mireia.ambros/models_2d_T2F25_val_2022.csv")
+        models = pd.read_csv("/home/usuaris/imatge/mireia.ambros/segment_valShuffleNet2022.csv")
     if tipus_model == '3d':
         models = pd.read_csv("/home/usuaris/imatge/mireia.ambros/models_3d_df.csv")
 
@@ -66,12 +66,12 @@ def main():
                 for i in cont:
                     video_list2.append("Yes")
                 video_ok += 1
-                cont_class_ok(models.loc[row, 'Actual'])
+                cont_class_ok(models.loc[row-1, 'Actual'])
             else:
                 for i in cont:
                     video_list2.append("No")
             num_videos += 1
-            cont_class(models.loc[row, 'Actual'])
+            cont_class(models.loc[row-1, 'Actual'])
             cont.clear()
             ok = True
             if models.loc[row, 'Correct prediction segment'] == "No":
@@ -81,7 +81,7 @@ def main():
     
     models['Correct prediction video'] = video_list2
     if tipus_model == '2d':
-        models.to_csv('videos_2d_T2F25_val_2021.csv', index=None, columns=None)
+        models.to_csv('videos_2d_T3F4_val_2021.csv', index=None, columns=None)
         print("Num of correct videos: ", video_ok)
         print("Num of videos: ", num_videos)
         print("Accuracy (video evaluation): ", round((video_ok/num_videos)*100, 2), "%")
@@ -101,7 +101,7 @@ def main():
         print("Num of road: ", cont_road)
         print("Accuracy (road): ", round((cont_road_ok/cont_road)*100, 2), "%")
     if tipus_model == '2d_2022':
-        models.to_csv('videos_2d_T2F25_val_2022.csv', index=None, columns=None)
+        models.to_csv('video_valShuffleNet2022.csv', index=None, columns=None)
         print("Num of correct videos: ", video_ok)
         print("Num of videos: ", num_videos)
         print("Accuracy (video evaluation): ", round((video_ok/num_videos)*100, 2), "%")

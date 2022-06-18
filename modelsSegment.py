@@ -112,7 +112,7 @@ import os
 import pandas as pd
 import math
 
-root = "/home/usuaris/imatge/mireia.ambros/train2022/"
+root = "/home/usuaris/imatge/mireia.ambros/train2021/"
 #root = "/home/usuaris/imatge/morros/work_fast/mobilitat/ridesafe/barcelona/split_videos/downsampled_cnt/"
 #root = "/mnt/gpid08/datasets/micromobility/lane_classification/videos/"
 folder2 = []
@@ -173,6 +173,7 @@ def process_video_segment(path, model):
             if cont_frames_seg == frames_seg_total:
 
                 # Apply a transform to normalize the image from video input
+                #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image_data = transform(Image.fromarray(frame))
                         
                 # Pass the input clip through the model
@@ -244,6 +245,7 @@ def main():
         if os.path.isdir(os.path.join(root, folder)):
             for file in sorted(os.listdir(root + folder)):
                 if file.find("mp4")!=-1:
+                    print(file)
                     video_path = root + folder + "/" + file
                     if tipus_model == '2d':
                         prediction = process_video_segment(video_path, model)  
@@ -282,9 +284,9 @@ def main():
                         prediction.clear()    
             df = pd.DataFrame(video_list, columns=['Filename', 'Num of segment', 'Actual', 'Prediction', 'Correct prediction segment'])
     if tipus_model == '2d':
-        df.to_csv('models_2d_T2F4_train_2021.csv', index=None, columns=None)
+        df.to_csv('models_2d_T4F25_train_2021.csv', index=None, columns=None)
     if tipus_model == '2d_2022':
-        df.to_csv('models_2d_T2F4_train_2022.csv', index=None, columns=None)
+        df.to_csv('models_2d_T4F2_trainnolinia_2022.csv', index=None, columns=None)
     if tipus_model == '3d':
         df.to_csv('models_3d_2021.csv', index=None, columns=None)
 
@@ -296,7 +298,8 @@ from matplotlib.collections import QuadMesh
 import seaborn as sn
 
 #class_list = ['bike', 'road']
-class_list = ['bike', 'road', 'shared', 'sidewalk']
+#class_list = ['bike', 'road', 'shared', 'sidewalk']
+class_list = ['bike', 'crosswalk', 'road', 'shared', 'sidewalk']
 
 def get_new_fig(fn, figsize=[10,10]):
     """ Init graphics """
@@ -476,9 +479,9 @@ def pretty_plot_confusion_matrix(df_cm, annot=True, cmap="Oranges", fmt='.2f', f
     plt.tight_layout()  #set layout slim
     plt.show()
     if tipus_model == '2d':
-        plt.savefig('models_2d_T2F4_train_2021.png')
+        plt.savefig('models_2d_T4F25_train_2021.png')
     if tipus_model == '2d_2022':
-        plt.savefig('models_2d_T2F4_train_2022.png')
+        plt.savefig('models_2d_T4F4_trainnolinia_2022.png')
     if tipus_model == '3d':
         plt.savefig('models_3d_2021.png')
 
