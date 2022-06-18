@@ -5,7 +5,7 @@ creation_database
 
 DESCRIPTION: 
 
-This script creates the table that contains the information of all the videos in the database using Pandas. Metadata information, weather, part of the day and geolocation. It also creates a map with the routes of all the videos using Folium.
+This script creates the table that contains the information (Metadata, weather, part of the day and geolocation) of all the videos in the database using Pandas. It also creates a map with the routes of all the videos using Folium.
 
 CONFIGURE:
 - train: path where it is located the csv file containing the list of train videos
