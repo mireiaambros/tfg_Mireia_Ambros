@@ -2,7 +2,6 @@ creation_database
 ========
 
 `database.py`
---------
 CONFIGURE:
 - train: path where it is located the csv file containing the list of train videos
 - val: path where it is located the csv file containing the list of validation videos
@@ -23,7 +22,6 @@ USAGE:
 >python database.py
 
 `query.py`
--------
 CONFIGURE:
 - df_query: The desired query
 
