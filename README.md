@@ -16,4 +16,4 @@ evaluation_models
 -------
 **Evaluation** at segment and video level of 2D models: **ShuffleNet V2** and **MobileNet V3**.
 
-SCRIPTS: `splitdatabase.py` (optional), `modelsSegment.py`, `modelsSegment2.py` (optional), `modelsVideo.py` 
+SCRIPTS: `splitdatabase.py`, `modelsSegment.py`, `modelsSegment2.py` (optional), `modelsVideo.py` 
