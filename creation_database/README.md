@@ -7,15 +7,15 @@ DESCRIPTION:
 
 This script creates the table that contains the information (metadata, weather, part of the day and geolocation) of all the videos in the database using Pandas. It also creates a map with the routes of all the videos using Folium.
 
-CONFIGURE:
+INPUT CONFIGURATION:
 - train: path where it is located the csv file containing the list of train videos
 - val: path where it is located the csv file containing the list of validation videos
 - test: path where it is located the csv file containing the list of test videos
-- root: path where it is located all videos (training, validation, test or more videos). Videos that do not belong to the above train, validation and test lists, even if they are in this path, will not be added to the database.
+- root: path where it is located all videos (training, validation, test or other videos). Videos that do not belong to the above train, validation and test lists, even if they are in this path, will not be added to the database.
 - meteo: path where it is located the weather information extracted from Meteocat open data
 - sun_2021 and sun_2022: path where sunrise and sunset information is located
 
-OUTPUT:
+OUTPUT CONFIGURATION:
 - CSV FILE: Line 247
 - HTML MAP: Line 286
 
@@ -32,10 +32,10 @@ DESCRIPTION:
 
 This script makes a query of the database table with all the videos. This query can be done with all the fields. It creates a new table and a map that shows only the routes that satisfy the query condition.
 
-CONFIGURE:
+INPUT CONFIGURATION:
 - df_query: The desired query
 
-OUTPUT:
+OUTPUT CONFIGURATION:
 - CSV FILE: Line 11
 - HTML MAP: Line 24
 

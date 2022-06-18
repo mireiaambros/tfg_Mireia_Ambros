@@ -6,7 +6,6 @@ root = "/home/usuaris/imatge/morros/work_fast/mobilitat/ridesafe/barcelona/split
 dest = "/home/usuaris/imatge/mireia.ambros/val2022/shared/"
 
 videos = pd.read_csv("/home/usuaris/imatge/mireia.ambros/validation.csv", sep=' ', header=None, names=['Filename', 'num'])
-#videos.to_csv('prova.csv', index=None, columns=None)
 
 for file_name in os.listdir(root):
     full_file_name = os.path.join(root, file_name)
