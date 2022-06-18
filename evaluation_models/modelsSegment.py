@@ -113,8 +113,7 @@ import pandas as pd
 import math
 
 root = "/home/usuaris/imatge/mireia.ambros/train2021/"
-#root = "/home/usuaris/imatge/morros/work_fast/mobilitat/ridesafe/barcelona/split_videos/downsampled_cnt/"
-#root = "/mnt/gpid08/datasets/micromobility/lane_classification/videos/"
+#root = "/home/usuaris/imatge/morros/work_fast/mobilitat/ridesafe/barcelona/split_videos/ori/"
 folder2 = []
 y_pred = []
 video_list = []
@@ -173,7 +172,7 @@ def process_video_segment(path, model):
             if cont_frames_seg == frames_seg_total:
 
                 # Apply a transform to normalize the image from video input
-                #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image_data = transform(Image.fromarray(frame))
                         
                 # Pass the input clip through the model
@@ -297,7 +296,6 @@ import matplotlib.font_manager as fm
 from matplotlib.collections import QuadMesh
 import seaborn as sn
 
-#class_list = ['bike', 'road']
 #class_list = ['bike', 'road', 'shared', 'sidewalk']
 class_list = ['bike', 'crosswalk', 'road', 'shared', 'sidewalk']
 

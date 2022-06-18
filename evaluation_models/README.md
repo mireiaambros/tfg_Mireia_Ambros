@@ -24,10 +24,11 @@ This script separates the videos into segments of T seconds and makes a predicti
 INPUT CONFIGURATION:
 - model: path where it is located the model you want to evaluate. There are three possible models in this script: 2d (ShuffleNet v2 trained with 2021 database), 2d_2022 (MobiliNet v3 trained with 2022 database) and 3d (X3D trained with 2021 database)
 - root: path where the videos of the set to be evaluated are located (folder obtained after executing *splitDatabase.py*)
+- class_list: list of classes predicted by the model (no crosswalk in 2021). Line 299
 
 OUTPUT CONFIGURATION:
 - CSV FILE with the information 'Filename', 'Num of segment', 'Actual', 'Prediction', 'Correct prediction segment': Lines 286-291
-- PNG: Confusion matrix. Lines 481-486
+- PNG: Confusion matrix. Lines 479-484
 
 USAGE:
 >srun --gres=gpu:1 --time=15:15:00 -c 10 --mem 20G python modelsSegment.py --modelType='2d' --segmentDuration=2 --framesPerSecond=3
